@@ -28,5 +28,7 @@ init([]) ->
          {hello_handler, {darwin_hello_handler, start_link, []},
             permanent, 10000, worker, [darwin_hello_handler]},
          {dataport_handler, {darwin_dataport_handler, start_link, []},
-            permanent, 10000, worker, [darwin_dataport_handler]}
+            permanent, 10000, worker, [darwin_dataport_handler]},
+         {utility_handler, {darwin_utility_handler, start_link, []},
+            permanent, 10000, worker, [darwin_utility_handler]}
         ]}}.
