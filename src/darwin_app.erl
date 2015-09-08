@@ -22,5 +22,9 @@ stop(_State) ->
     ok.
 
 init([]) ->
-    {ok, {{one_for_one, 3, 10},[{coap_handler, {darwin_coap_handler, start_link, []},
-                                 permanent, 10000, worker, [darwin_coap_handler]}]}}.
+    coap_server:start(),
+    {ok, {{one_for_one, 3, 10},
+        [
+         {hello_handler, {darwin_hello_handler, start_link, []},
+            permanent, 10000, worker, [darwin_hello_handler]}
+        ]}}.

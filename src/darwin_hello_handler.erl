@@ -1,4 +1,4 @@
--module(darwin_coap_handler).
+-module(darwin_hello_handler).
 -behavior(gen_server).
 
 -include_lib("gen_coap/include/coap.hrl").
@@ -13,11 +13,9 @@ start_link() ->
     gen_server:start_link(?MODULE, [], []).
 
 init([]) ->
-    coap_server:start(),
     coap_server_content:add_handler(self(),
         [{absolute, ["hello"], []},          % Hello
-         {absolute, ["hello", who], []},     % Hello, <Name>
-         {absolute, ["a1", alias], []}       % Alias Read/Write
+         {absolute, ["hello", who], []}     % Hello, <Name>
         ]),
     {ok, []}.
 
@@ -35,10 +33,6 @@ handle_info({coap_request, _ChId, Channel, _Match, Request=#coap_message{method=
 % Hello
 handle_info({coap_request, _ChId, Channel, _Match, Request=#coap_message{method='get',options=[{uri_path, ["hello"]}]}}, State) ->
     coap_request:reply_content(Channel, Request, <<"text/plain">>, <<"hello, world">>),
-    {noreply, State};
-% Alias Read
-handle_info({coap_request, _ChId, Channel, _Match, Request=#coap_message{method='get',options=[{uri_path, ["a1", Name]}]}}, State) ->
-    coap_request:reply_content(Channel, Request, <<"text/plain">>, erlang:iolist_to_binary([<<"hello, ">>, Name])),
     {noreply, State};
 handle_info(_Info, State) ->
     {noreply, State}.
