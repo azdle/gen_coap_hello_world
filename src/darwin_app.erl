@@ -26,5 +26,7 @@ init([]) ->
     {ok, {{one_for_one, 3, 10},
         [
          {hello_handler, {darwin_hello_handler, start_link, []},
-            permanent, 10000, worker, [darwin_hello_handler]}
+            permanent, 10000, worker, [darwin_hello_handler]},
+         {dataport_handler, {darwin_dataport_handler, start_link, []},
+            permanent, 10000, worker, [darwin_dataport_handler]}
         ]}}.
