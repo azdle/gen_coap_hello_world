@@ -1,44 +1,11 @@
 -module(darwin_hello_handler).
--behavior(gen_server).
+
+-export([coap_discover/2, coap_get/4]).
 
 -include_lib("gen_coap/include/coap.hrl").
 
--export([start_link/0]).
+coap_discover(Prefix, _Args) ->
+    [{absolute, Prefix, []}].
 
--export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2,
-         code_change/3]).
-
-
-start_link() ->
-    gen_server:start_link(?MODULE, [], []).
-
-init([]) ->
-    coap_server_content:add_handler(self(),
-        [{absolute, ["hello"], []},          % Hello
-         {absolute, ["hello", who], []}     % Hello, <Name>
-        ]),
-    {ok, []}.
-
-%% callbacks
-handle_call(_Msg, _From, State) ->
-    {reply, unknown_command, State}.
-
-handle_cast(_Msg, State) ->
-    {noreply, State}.
-
-% Hello, <Name>
-handle_info({coap_request, _ChId, Channel, _Match, Request=#coap_message{method='get',options=[{uri_path, ["hello", Name]}]}}, State) ->
-    coap_request:reply_content(Channel, Request, <<"text/plain">>, erlang:iolist_to_binary([<<"hello, ">>, Name])),
-    {noreply, State};
-% Hello
-handle_info({coap_request, _ChId, Channel, _Match, Request=#coap_message{method='get',options=[{uri_path, ["hello"]}]}}, State) ->
-    coap_request:reply_content(Channel, Request, <<"text/plain">>, <<"hello, world">>),
-    {noreply, State};
-handle_info(_Info, State) ->
-    {noreply, State}.
-
-terminate(_Reason, _State) ->
-    ok.
-
-code_change(_OldVsn, State, _Extra) ->
-    {ok, State}.
+coap_get(_ChId, _Prefix, [], _Request) ->
+    {ok, #coap_resource{format = <<"text/plain">>, content = <<"hello">>}}.

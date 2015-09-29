@@ -4,8 +4,7 @@
   {vsn, "1"},
   {modules, [
   			 darwin_app,
-  			 darwin_sup,
-             coap_server
+  			 coap_server
             ]},
   {registered, []},
   {applications, [

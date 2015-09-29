@@ -22,13 +22,12 @@ stop(_State) ->
     ok.
 
 init([]) ->
-    coap_server:start(),
-    {ok, {{one_for_one, 3, 10},
-        [
-         {hello_handler, {darwin_hello_handler, start_link, []},
-            permanent, 10000, worker, [darwin_hello_handler]},
-         {dataport_handler, {darwin_dataport_handler, start_link, []},
-            permanent, 10000, worker, [darwin_dataport_handler]},
-         {utility_handler, {darwin_utility_handler, start_link, []},
-            permanent, 10000, worker, [darwin_utility_handler]}
-        ]}}.
+    %% Required Applications
+    inets:start(),
+    ssl:start(),
+
+    application:start(gen_coap),
+    coap_server_content:add_handler([<<"hello">>], darwin_hello_handler, undefined),
+    coap_server_content:add_handler([<<"ts">>], darwin_timestamp_handler, undefined),
+    coap_server_content:add_handler([<<"a1">>], darwin_dataport_handler, undefined),
+    {ok, {{one_for_one, 3, 10}, []}}.
