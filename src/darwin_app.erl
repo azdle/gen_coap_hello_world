@@ -30,4 +30,5 @@ init([]) ->
     coap_server_content:add_handler([<<"hello">>], darwin_hello_handler, undefined),
     coap_server_content:add_handler([<<"ts">>], darwin_timestamp_handler, undefined),
     coap_server_content:add_handler([<<"a1">>], darwin_dataport_handler, undefined),
+    coap_server_content:add_handler([<<"rpc">>], darwin_rpc_handler, undefined),
     {ok, {{one_for_one, 3, 10}, []}}.
