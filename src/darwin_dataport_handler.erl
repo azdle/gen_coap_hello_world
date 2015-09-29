@@ -7,6 +7,7 @@
 coap_discover(Prefix, _Args) ->
     [{absolute, Prefix, []}].
 
+%% Single Alias Read
 coap_get(_ChId, _Prefix, [Alias], #coap_message{options=[{uri_query, [CIK]} | _T]}) ->
     {ok,{{_Vsn,_StatusCode,_StatusText}, _Headers, Body}} =
         httpc:request(get, {"http://m2.exosite.com/onep:v1/stack/alias?" ++ binary_to_list(Alias),
