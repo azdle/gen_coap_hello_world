@@ -13,7 +13,7 @@
 %% ===================================================================
 
 start() ->
-	start(normal, []).
+    start(normal, []).
 
 start(normal, _StartArgs) ->
     supervisor:start_link(?MODULE, _Arg = []).
